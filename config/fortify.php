@@ -154,9 +154,9 @@ return [
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,
-        */
             // 'window' => 0,
         ]),
+        */
     ],
 
 ];
