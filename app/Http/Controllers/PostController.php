@@ -49,8 +49,8 @@ class PostController extends Controller
     {
         $post->load([
             'user', 
-            'comments', 
-            'tags'
+            'tags',
+            'comments.user',
         ])->loadCount('likes');
         return view('posts.show', compact('post'));
     }
