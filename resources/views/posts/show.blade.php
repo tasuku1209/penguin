@@ -8,6 +8,11 @@
     <span>{{ $tag->name }}</span>
 @endforeach
 
+<form action="{{ route('likes.store', $post) }}" method="POST">
+    @csrf
+    <button type="submit">いいね</button>
+</form>
+
 <form action="{{ route('comments.store', $post) }}" method="POST">
     @csrf
     <textarea name="body" placeholder="コメントを入力">{{ old('body') }}</textarea>
