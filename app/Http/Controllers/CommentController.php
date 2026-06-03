@@ -16,11 +16,9 @@ class CommentController extends Controller
     {
         $validated = $request->validated();
 
-        //$validated['user_id'] = 1; // 認証実装までの仮のユーザーID
-
         $post->comments()->create([
             'body' => $validated['body'],
-            'user_id' => 1, // 認証実装までの仮のユーザーID
+            'user_id' => auth()->id(), 
         ]);
 
         return redirect()->route('posts.show', $post);

@@ -1,3 +1,17 @@
+@auth
+    <p>ログイン中: {{ auth()->user()->name }} さん</p>
+
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit">ログアウト</button>
+    </form>
+@endauth
+
+@guest
+    <a href="{{ route('login') }}">ログイン</a>
+    <a href="{{ route('register') }}">会員登録</a>
+@endguest
+
 <h1>投稿一覧</h1>
 
 <a href="{{ route('posts.create') }}">新規投稿</a>
