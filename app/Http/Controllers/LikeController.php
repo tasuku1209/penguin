@@ -11,14 +11,14 @@ class LikeController extends Controller
     public function store(Request $request, Post $post)
     {
         $like = Like::where('post_id', $post->id)
-            ->where('user_id', 1) // 認証実装までの仮のユーザーID
+            ->where('user_id', auth()->id())
             ->first();
         
         if ($like) {
             $like->delete();
         } else {
             $post->likes()->create([
-                'user_id' => 1, // 認証実装までの仮のユーザーID
+                'user_id' => auth()->id(),
             ]);
         }
 

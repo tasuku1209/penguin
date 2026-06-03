@@ -35,7 +35,7 @@ class PostController extends Controller
     {
         $validated = $request->validated();
 
-        $validated['user_id'] = 1; // 認証実装までの仮のユーザーID
+        $validated['user_id'] = auth()->id(); 
 
         Post::create($validated);
 
