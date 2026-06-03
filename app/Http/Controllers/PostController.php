@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->only(['create', 'store']);
+        $this->middleware('auth')->only(['create', 'store', 'destroy']);
     }
     
     /**
@@ -64,9 +64,10 @@ class PostController extends Controller
      * Show the form for editing the specified resource.
      */
     /*
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        return view('posts.edit', compact('post'));
     }
     */
 
@@ -74,9 +75,11 @@ class PostController extends Controller
      * Update the specified resource in storage.
      */
     /*
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        $post->update($request->all());
+        return redirect()->route('posts.show', $post);
     }
     */
 
@@ -85,6 +88,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post);
         $post->delete();
         return redirect()->route('posts.index');
     }

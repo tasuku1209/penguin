@@ -24,6 +24,13 @@
     <p>コメント数: {{ $post->comments_count }}</p>
     <p>いいね数: {{ $post->likes_count }}</p>
     <a href="{{ route('posts.show', $post) }}">詳細</a>
+    @can('delete', $post) 
+        <form method="POST" action="{{ route('posts.destroy', $post) }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit">削除</button>
+        </form>
+    @endcan
 @endforeach
 
 {{ $posts->links() }}
