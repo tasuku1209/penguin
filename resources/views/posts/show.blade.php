@@ -1,6 +1,16 @@
 <h1>{{ $post->title }}</h1>
 <p>{{ $post->user->name }}</p>
 <p>{{ $post->body }}</p>
+@can('update', $post)
+    <a href="{{ route('posts.edit', $post) }}">編集</a>
+@endcan
+@can('delete', $post) 
+    <form method="POST" action="{{ route('posts.destroy', $post) }}">
+        @csrf
+        @method('DELETE')
+        <button type="submit">削除</button>
+    </form>
+@endcan
 <p>いいね数: {{ $post->likes_count }}</p>
 
 <h3>タグ</h3>
