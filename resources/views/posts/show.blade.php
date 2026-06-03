@@ -8,19 +8,21 @@
     <span>{{ $tag->name }}</span>
 @endforeach
 
-<form action="{{ route('likes.store', $post) }}" method="POST">
-    @csrf
-    <button type="submit">いいね</button>
-</form>
+@auth
+    <form action="{{ route('likes.store', $post) }}" method="POST">
+        @csrf
+        <button type="submit">いいね</button>
+    </form>
 
-<form action="{{ route('comments.store', $post) }}" method="POST">
-    @csrf
-    <textarea name="body" placeholder="コメントを入力">{{ old('body') }}</textarea>
-    @error('body')
-        <p>{{ $message }}</p>
-    @enderror
-    <button type="submit">コメントする</button>
-</form>
+    <form action="{{ route('comments.store', $post) }}" method="POST">
+        @csrf
+        <textarea name="body" placeholder="コメントを入力">{{ old('body') }}</textarea>
+        @error('body')
+            <p>{{ $message }}</p>
+        @enderror
+        <button type="submit">コメントする</button>
+    </form>
+@endauth
 
 <h3>コメント</h3>
 @forelse ($post->comments as $comment)

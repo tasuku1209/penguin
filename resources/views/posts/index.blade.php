@@ -14,7 +14,9 @@
 
 <h1>投稿一覧</h1>
 
-<a href="{{ route('posts.create') }}">新規投稿</a>
+@auth
+    <a href="{{ route('posts.create') }}">新規投稿</a>
+@endauth
 
 @foreach ($posts as $post)
     <h2>{{ $post->title }}</h2>
