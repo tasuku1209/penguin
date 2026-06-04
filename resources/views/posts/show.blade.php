@@ -38,6 +38,13 @@
 @forelse ($post->comments as $comment)
     <p>{{ $comment->body }}</p>
     <p>by {{ $comment->user->name }}</p>
+    @can('delete', $comment) 
+        <form method="POST" action="{{ route('comments.destroy', [$post, $comment]) }}">
+            @csrf
+            @method('DELETE')
+            <button type="submit">削除</button>
+        </form>
+    @endcan
 @empty
     <p>コメントはまだありません。</p>
 @endforelse
