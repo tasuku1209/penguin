@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
+     public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function store(StoreCommentRequest $request, Post $post)
     {
         $validated = $request->validated();
@@ -23,4 +25,11 @@ class CommentController extends Controller
 
         return redirect()->route('posts.show', $post);
     }
+
+        public function destroy(Post $post, Comment $comment)
+        {
+            $this->authorize('delete', $comment);
+            $comment->delete();
+            return redirect()->route('posts.show', $post);
+        }
 }
