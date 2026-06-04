@@ -8,11 +8,21 @@ use Illuminate\Database\Seeder;
 
 class TagSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Tag::factory()->count(10)->create();
+        $tags = [
+            'Laravel',
+            'PHP',
+            'JavaScript',
+            'Vue',
+            'Docker',
+            'MySQL',
+            'AWS',
+            'Git',
+        ];
+
+        foreach ($tags as $tag) {
+            Tag::firstOrCreate(['name' => $tag]);
+        }
     }
 }
