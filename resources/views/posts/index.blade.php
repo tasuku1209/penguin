@@ -21,6 +21,12 @@
 @foreach ($posts as $post)
     <h2>{{ $post->title }}</h2>
     <p>{{ $post->user->name }}</p>
+    <p>
+        タグ:
+        @foreach ($post->tags as $tag)
+            <span class="tag">{{ $tag->name }}</span>
+        @endforeach
+    </p>
     <p>コメント数: {{ $post->comments_count }}</p>
     <p>いいね数: {{ $post->likes_count }}</p>
     <a href="{{ route('posts.show', $post) }}">詳細</a>

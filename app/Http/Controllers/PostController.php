@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -16,7 +17,7 @@ class PostController extends Controller
     
     public function index()
     {
-        $posts = Post::with('user')
+        $posts = Post::with('user' , 'tags')
             ->withCount(['comments', 'likes'])
             ->latest()
             ->paginate(10);
@@ -25,14 +26,16 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('posts.create');
+        $tags = Tag::all();
+        return view('posts.create', compact('tags'));
     }
 
     public function store(StorePostRequest $request)
     {
         $validated = $request->validated();
         $validated['user_id'] = auth()->id(); 
-        Post::create($validated);
+        $post = Post::create($validated);
+        $post->tags()->attach($request->input('tags', []));
         return redirect()->route('posts.index');
     }
 
@@ -49,19 +52,22 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $this->authorize('update', $post);
-        return view('posts.edit', compact('post'));
+        $tags = Tag::all();
+        return view('posts.edit', compact('post', 'tags'));
     }
 
     public function update(UpdatePostRequest $request, Post $post)
     {
         $this->authorize('update', $post);
         $post->update($request->validated());
+        $post->tags()->sync($request->input('tags', []));
         return redirect()->route('posts.show', $post);
     }
 
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+        $post->tags()->detach();
         $post->delete();
         return redirect()->route('posts.index');
     }
