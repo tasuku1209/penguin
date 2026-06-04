@@ -14,6 +14,26 @@
 
 <h1>投稿一覧</h1>
 
+<form method="GET" action="{{ route('posts.index') }}">
+    <input
+        type="text"
+        name="keyword"
+        value="{{ request('keyword') }}"
+        placeholder="キーワードを入力"
+    >
+    <button type="submit">検索</button>
+</form>
+
+@if (request('keyword'))
+    <p>
+        「{{ request('keyword') }}」の検索結果 {{ $posts->total() }}件
+    </p>
+
+    <a href="{{ route('posts.index') }}">
+        一覧へ戻る
+    </a>
+@endif
+
 @auth
     <a href="{{ route('posts.create') }}">新規投稿</a>
 @endauth

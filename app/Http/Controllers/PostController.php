@@ -15,12 +15,20 @@ class PostController extends Controller
         $this->middleware('auth')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
     
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::with('user' , 'tags')
-            ->withCount(['comments', 'likes'])
-            ->latest()
-            ->paginate(10);
+        $posts = Post::with('user', 'tags')
+            ->withCount(['comments', 'likes']);
+
+        if ($request->keyword) {
+            $posts->where('title', 'like', '%' . $request->keyword . '%')
+                ->orWhere('body', 'like', '%' . $request->keyword . '%');
+        }
+
+        $posts = $posts->latest()
+            ->paginate(10)
+            ->withQueryString();
+
         return view('posts.index', compact('posts'));
     }
 
