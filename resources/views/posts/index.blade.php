@@ -22,6 +22,20 @@
         placeholder="キーワードを入力"
     >
 
+    <h3>タグ</h3>
+    @foreach ($tags as $tag)
+        <label>
+            <input
+                type="checkbox"
+                name="tags[]"
+                value="{{ $tag->id }}"
+                {{ is_array(request('tags')) 
+                && in_array($tag->id, request('tags')) ? 'checked' : '' }}
+            >
+            {{ $tag->name }}
+        </label>
+    @endforeach
+
     <select name="sort">
         <option value="">並び順を選択</option>
         <option value="latest"{{ request('sort') === "latest" ? ' selected' : '' }}>新着順</option>
@@ -37,7 +51,7 @@
         表示投稿 {{ $posts->total() }}件
     </p>
 
-@if (request()->filled('keyword') || request()->filled('sort'))
+@if (request()->filled('keyword') || request()->filled('sort') || request()->filled('tags'))
     <a href="{{ route('posts.index') }}">
         一覧へ戻る
     </a>
