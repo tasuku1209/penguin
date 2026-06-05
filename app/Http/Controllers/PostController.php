@@ -17,12 +17,21 @@ class PostController extends Controller
     
     public function index(Request $request)
     {
+        $tags = Tag::all();
         $posts = Post::with('user', 'tags')
             ->withCount(['comments', 'likes']);
 
         if ($request->filled('keyword')) {
-            $posts->where('title', 'like', '%' . $request->keyword . '%')
-                ->orWhere('body', 'like', '%' . $request->keyword . '%');
+            $posts->where(function ($query) use ($request) {
+                 $query->where('title', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('body', 'like', '%' . $request->keyword . '%');
+            });
+        }
+
+        if ($request->filled('tags')) {
+            $posts->whereHas('tags', function ($query) use ($request) {
+                $query->whereIn('id', $request->tags);
+            });
         }
 
         if ($request->sort === 'latest') {
@@ -40,7 +49,7 @@ class PostController extends Controller
         $posts = $posts->paginate(10)
             ->withQueryString();
 
-        return view('posts.index', compact('posts'));
+        return view('posts.index', compact('posts', 'tags'));
     }
 
     public function create()
