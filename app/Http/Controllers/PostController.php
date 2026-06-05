@@ -20,13 +20,24 @@ class PostController extends Controller
         $posts = Post::with('user', 'tags')
             ->withCount(['comments', 'likes']);
 
-        if ($request->keyword) {
+        if ($request->filled('keyword')) {
             $posts->where('title', 'like', '%' . $request->keyword . '%')
                 ->orWhere('body', 'like', '%' . $request->keyword . '%');
         }
 
-        $posts = $posts->latest()
-            ->paginate(10)
+        if ($request->sort === 'latest') {
+            $posts->orderBy('created_at', 'desc');
+        } elseif ($request->sort === 'oldest') {
+            $posts->orderBy('created_at', 'asc');
+        } elseif ($request->sort === 'likes') {
+            $posts->orderBy('likes_count', 'desc');
+        } elseif ($request->sort === 'comments') {
+            $posts->orderBy('comments_count', 'desc');
+        } else {
+            $posts->latest();
+        }
+
+        $posts = $posts->paginate(10)
             ->withQueryString();
 
         return view('posts.index', compact('posts'));
