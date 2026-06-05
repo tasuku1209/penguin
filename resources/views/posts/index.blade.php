@@ -21,14 +21,23 @@
         value="{{ request('keyword') }}"
         placeholder="キーワードを入力"
     >
-    <button type="submit">検索</button>
+
+    <select name="sort">
+        <option value="">並び順を選択</option>
+        <option value="latest"{{ request('sort') === "latest" ? ' selected' : '' }}>新着順</option>
+        <option value="oldest"{{ request('sort') === "oldest" ? ' selected' : '' }}>古い順</option>
+        <option value="likes"{{ request('sort') === "likes" ? ' selected' : '' }}>いいね順</option>
+        <option value="comments"{{ request('sort') === "comments" ? ' selected' : '' }}>コメント順</option>
+    </select>
+
+    <button type="submit">適用</button>
 </form>
 
-@if (request('keyword'))
     <p>
-        「{{ request('keyword') }}」の検索結果 {{ $posts->total() }}件
+        表示投稿 {{ $posts->total() }}件
     </p>
 
+@if (request()->filled('keyword') || request()->filled('sort'))
     <a href="{{ route('posts.index') }}">
         一覧へ戻る
     </a>
